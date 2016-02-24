@@ -18,19 +18,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var List__item = _react2.default.createClass({
   displayName: "List__item",
 
+  propsTypes: {
+    data: _react2.default.PropTypes.array,
+    inputTxt: _react2.default.PropTypes.string,
+    onSearchText: _react2.default.PropTypes.func
+  },
   render: function render() {
-    if (Object.keys(this.props.data.entries).length === 0) return _react2.default.createElement("div", null);
+    if (Object.keys(this.props.data).length === 0) return _react2.default.createElement("div", null);
 
-    var sFilter = this.props.data.searchFilter;
-    var itemList = this.props.data.entries.map(function (item) {
+    var inputTxt = this.props.inputTxt;
+    var itemList = this.props.data.map(function (item, i) {
       var imgSrc = (item.content.match(/<img src="(?=http:\/\/cdn-ak\.b)(.+?)"[^>]+?>/) || [])[1];
 
-      if (sFilter !== "" && !new RegExp(sFilter, "i").test(item.title)) {
+      if (inputTxt !== "" && !new RegExp(inputTxt, "i").test(item.title)) {
         return false;
       }
       return _react2.default.createElement(
         "a",
-        { href: item.link, target: "_blank" },
+        { href: item.link, key: i, target: "_blank" },
         _react2.default.createElement(
           "div",
           { className: "media" },
@@ -71,17 +76,20 @@ var List__item = _react2.default.createClass({
 var List = _react2.default.createClass({
   displayName: "List",
 
+  propTypes: {
+    data: _react2.default.PropTypes.array
+  },
+  getDefaultProps: function getDefaultProps() {
+    return {
+      data: []
+    };
+  },
   getInitialState: function getInitialState() {
     return {
-      data: {
-        entries: [],
-        searchFilter: ""
-      }
+      searchFilter: ""
     };
   },
   componentWillMount: function componentWillMount() {
-    var _this = this;
-
     var promise = Promise.resolve($.ajax({
       type: "GET",
       url: "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://b.hatena.ne.jp/entrylist/it.rss&num=30",
@@ -89,28 +97,26 @@ var List = _react2.default.createClass({
     }));
 
     promise.then(function (resolve) {
-      _this.setState({
-        data: {
-          entries: resolve.responseData.feed.entries
-        }
+      /*
+      this.setProps({
+        data: resolve.responseData.feed.entries
       });
+      */
+      _reactDom2.default.render(_react2.default.createElement(List, { data: resolve.responseData.feed.entries }), document.getElementById('content'));
     });
   },
   render: function render() {
     return _react2.default.createElement(
       "div",
       null,
-      _react2.default.createElement(List__item, { data: this.state.data, onSearchText: this.searchText })
+      _react2.default.createElement(List__item, { data: this.props.data, inputTxt: this.state.searchFilter, onSearchText: this.searchText })
     );
   },
   // インクリメンタル検索用Filter文字設定関数
   searchText: function searchText(e) {
-    var newState = (0, _reactAddonsUpdate2.default)(this.state, {
-      data: {
-        searchFilter: { $set: e.target.value }
-      }
+    this.setState({
+      searchFilter: e.target.value
     });
-    this.setState(newState);
   }
 });
 

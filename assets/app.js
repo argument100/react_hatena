@@ -5,18 +5,23 @@ import ReactUpdate from "react-addons-update";
 
 
 let List__item = React.createClass({
+  propsTypes: {
+    data: React.PropTypes.array,
+    inputTxt: React.PropTypes.string,
+    onSearchText: React.PropTypes.func
+  },
   render: function(){
-    if(Object.keys(this.props.data.entries).length === 0) return <div></div>
+    if(Object.keys(this.props.data).length === 0) return <div></div>
 
-    let sFilter = this.props.data.searchFilter;
-    let itemList = this.props.data.entries.map(function(item){
+    let inputTxt = this.props.inputTxt;
+    let itemList = this.props.data.map(function(item, i){
       let imgSrc = (item.content.match(/<img src="(?=http:\/\/cdn-ak\.b)(.+?)"[^>]+?>/) || [])[1];
 
-      if(sFilter !== "" && !new RegExp(sFilter, "i").test(item.title)) {
+      if(inputTxt !== "" && !new RegExp(inputTxt, "i").test(item.title)) {
         return false;
       }
       return(
-        <a href={item.link} target="_blank">
+        <a href={item.link} key={i} target="_blank">
           <div className="media">
             <div className="media-left">
               <img className="media-object" src={imgSrc} alt="" />
@@ -45,12 +50,17 @@ let List__item = React.createClass({
 
 // 親コンポーネント
 let List = React.createClass({
+  propTypes: {
+    data: React.PropTypes.array
+  },
+  getDefaultProps: function(){
+    return {
+      data: []
+    };
+  },
   getInitialState: function() {
     return {
-      data: {
-        entries: [],
-        searchFilter: ""
-      }
+      searchFilter: ""
     };
   },
   componentWillMount: function(){
@@ -61,28 +71,29 @@ let List = React.createClass({
     }));
 
     promise.then((resolve) => {
-      this.setState({
-        data:{
-          entries: resolve.responseData.feed.entries
-        }
+      /*
+      this.setProps({
+        data: resolve.responseData.feed.entries
       });
+      */
+      ReactDOM.render(
+        <List data={resolve.responseData.feed.entries} />,
+        document.getElementById('content')
+      );
     });
   },
   render: function(){
     return(
       <div>
-        <List__item data={this.state.data} onSearchText={this.searchText} />
+        <List__item data={this.props.data} inputTxt={this.state.searchFilter} onSearchText={this.searchText} />
       </div>
     );
   },
   // インクリメンタル検索用Filter文字設定関数
   searchText: function(e){
-    let newState = ReactUpdate(this.state, {
-      data:{
-        searchFilter: {$set: e.target.value}
-      }
+    this.setState({
+      searchFilter: e.target.value
     });
-    this.setState(newState);
   }
 });
 
