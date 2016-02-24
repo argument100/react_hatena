@@ -1,8 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// React.js v0.14から[addons]は個別パッケージに分割されたので機能ごとにnpmインストールが必要
-import ReactUpdate from "react-addons-update";
-
 
 let List__item = React.createClass({
   propsTypes: {
@@ -71,11 +68,6 @@ let List = React.createClass({
     }));
 
     promise.then((resolve) => {
-      /*
-      this.setProps({
-        data: resolve.responseData.feed.entries
-      });
-      */
       // react0.14からはsetPropsは非推奨、ReactDOMでレンダリングし直すのが良い
       ReactDOM.render(
         <List data={resolve.responseData.feed.entries} />,
