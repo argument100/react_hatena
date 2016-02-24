@@ -19,9 +19,9 @@ var List__item = _react2.default.createClass({
   displayName: "List__item",
 
   propsTypes: {
-    data: _react2.default.PropTypes.array,
-    inputTxt: _react2.default.PropTypes.string,
-    onSearchText: _react2.default.PropTypes.func
+    data: _react2.default.PropTypes.array.isRequired,
+    inputTxt: _react2.default.PropTypes.string.isRequired,
+    onSearchText: _react2.default.PropTypes.func.isRequired
   },
   render: function render() {
     if (Object.keys(this.props.data).length === 0) return _react2.default.createElement("div", null);
@@ -102,6 +102,7 @@ var List = _react2.default.createClass({
         data: resolve.responseData.feed.entries
       });
       */
+      // react0.14からはsetPropsは非推奨、ReactDOMでレンダリングし直すのが良い
       _reactDom2.default.render(_react2.default.createElement(List, { data: resolve.responseData.feed.entries }), document.getElementById('content'));
     });
   },

@@ -6,9 +6,9 @@ import ReactUpdate from "react-addons-update";
 
 let List__item = React.createClass({
   propsTypes: {
-    data: React.PropTypes.array,
-    inputTxt: React.PropTypes.string,
-    onSearchText: React.PropTypes.func
+    data: React.PropTypes.array.isRequired,
+    inputTxt: React.PropTypes.string.isRequired,
+    onSearchText: React.PropTypes.func.isRequired
   },
   render: function(){
     if(Object.keys(this.props.data).length === 0) return <div></div>
@@ -76,6 +76,7 @@ let List = React.createClass({
         data: resolve.responseData.feed.entries
       });
       */
+      // react0.14からはsetPropsは非推奨、ReactDOMでレンダリングし直すのが良い
       ReactDOM.render(
         <List data={resolve.responseData.feed.entries} />,
         document.getElementById('content')
