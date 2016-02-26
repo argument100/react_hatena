@@ -56,7 +56,12 @@ var List__item = _react2.default.createClass({
     return _react2.default.createElement(
       "div",
       { className: "mediaBox" },
-      _react2.default.createElement("input", { type: "text", onInput: this._onSearchText }),
+      _react2.default.createElement(
+        "strong",
+        null,
+        "絞り込む"
+      ),
+      _react2.default.createElement("input", { type: "text", className: "form-control", onInput: this._onSearchText }),
       itemList
     );
   },

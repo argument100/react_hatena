@@ -33,7 +33,8 @@ let List__item = React.createClass({
     });
     return(
       <div className="mediaBox">
-        <input type="text" onInput={this._onSearchText} />
+        <strong>絞り込む</strong>
+        <input type="text" className="form-control" onInput={this._onSearchText} />
         {itemList}
       </div>
     );
