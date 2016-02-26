@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+
 let List__item = React.createClass({
   propsTypes: {
     data: React.PropTypes.array.isRequired,
@@ -64,7 +65,7 @@ let List = React.createClass({
   componentWillMount: function(){
     let promise = Promise.resolve($.ajax({
       type: "GET",
-      url: "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://b.hatena.ne.jp/entrylist/it.rss&num=30",
+      url: "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&q=http://b.hatena.ne.jp/hotentry/it.rss&num=30",
       dataType: "jsonp"
     }));
 
